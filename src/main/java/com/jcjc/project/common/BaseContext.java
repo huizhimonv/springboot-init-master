@@ -1,16 +1,24 @@
 package com.jcjc.project.common;
 
 /**
- * 基于ThreadLocal封装工具类，用户保存和获取当前用户id
+ * 基于ThreadLocal封装工具类，用户保存和获取当前登录用户id
  */
 public class BaseContext {
     private static ThreadLocal<Long> threadLocal = new ThreadLocal<>();
 
-    public static void setCurrent(Long id) {
-          threadLocal.set(id);
+    /**
+     * 设置值
+     * @param id
+     */
+    public static void setCurrentId(Long id){
+        threadLocal.set(id);
     }
 
-    public static Long getCurrent() {
-        return  threadLocal.get();
+    /**
+     * 获取值
+     * @return
+     */
+    public static Long getCurrentId(){
+        return threadLocal.get();
     }
 }

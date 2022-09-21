@@ -1,7 +1,10 @@
 package com.jcjc.project.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.jcjc.project.dto.SetmealDto;
 import com.jcjc.project.model.entity.Setmeal;
+
+import java.util.List;
 
 
 /**
@@ -10,5 +13,15 @@ import com.jcjc.project.model.entity.Setmeal;
 * @createDate 2022-09-07 17:12:32
 */
 public interface SetmealService extends IService<Setmeal> {
+
+
+    /**
+     * 新增套餐，同时保存套餐和菜品的关联
+     * @param setmealDto
+     */
+    public void saveWithDish(SetmealDto setmealDto);
+
+
+    public void removeWithDish(List<Long> ids);
 
 }
