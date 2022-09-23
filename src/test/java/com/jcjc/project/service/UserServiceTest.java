@@ -19,17 +19,17 @@ class UserServiceTest {
     @Resource
     private UserService userService;
 
-    @Test
-    void testDeleteUser() {
-        boolean result = userService.removeById(1L);
-        Assertions.assertTrue(result);
-    }
-
-    @Test
-    void testGetUser() {
-        User user = userService.getById(1L);
-        Assertions.assertNotNull(user);
-    }
+//    @Test
+//    void testDeleteUser() {
+//        boolean result = userService.removeById(1L);
+//        Assertions.assertTrue(result);
+//    }
+//
+//    @Test
+//    void testGetUser() {
+//        User user = userService.getById(1L);
+//        Assertions.assertNotNull(user);
+//    }
 
 
 }
