@@ -197,4 +197,24 @@ public class DishController {
 
         return R.success(dishDtoList);
     }
+
+    /**
+     * 对菜品进行停售或起售
+     * @param status
+     * @param ids
+     * @return
+     */
+    @PostMapping("/status/{status}")
+    public R<String> status(@PathVariable("status") Integer status,Long ids){
+           log.info("status:{}",status);
+           log.info("ids:{}",ids);
+        Dish dish = dishService.getById(ids);
+        if (dish != null){
+            dish.setStatus(status);
+            dishService.updateById(dish);
+            return R.success("开始起售");
+        }
+        return R.error("售卖状态设置异常");
+    }
+
 }
