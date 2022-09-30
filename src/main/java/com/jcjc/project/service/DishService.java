@@ -5,6 +5,8 @@ import com.jcjc.project.common.R;
 import com.jcjc.project.dto.DishDto;
 import com.jcjc.project.model.entity.Dish;
 
+import java.util.List;
+
 
 /**
 * @author 神原秋人
@@ -19,4 +21,7 @@ public interface DishService extends IService<Dish> {
     public DishDto getByIdWithFlavor(Long id);
     //更新菜品信息以及对应口味的信息
     public void updateWithFlavor(DishDto dishDto);
+
+    //根据传过来的id批量或者是单个的删除菜品
+    void deleteByIds(List<Long> ids);
 }

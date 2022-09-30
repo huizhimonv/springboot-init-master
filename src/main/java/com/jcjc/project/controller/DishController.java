@@ -205,16 +205,35 @@ public class DishController {
      * @return
      */
     @PostMapping("/status/{status}")
-    public R<String> status(@PathVariable("status") Integer status,Long ids){
-           log.info("status:{}",status);
-           log.info("ids:{}",ids);
-        Dish dish = dishService.getById(ids);
-        if (dish != null){
-            dish.setStatus(status);
-            dishService.updateById(dish);
-            return R.success("开始起售");
+    public R<String> status(@PathVariable("status") Integer status,@RequestParam List<Long> ids){
+//           log.info("status:{}",status);
+//           log.info("ids:{}",ids);
+        LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.in(ids != null, Dish::getId,ids);
+        List<Dish> list = dishService.list(queryWrapper);
+        for (Dish dish : list) {
+            if (dish != null){
+                dish.setStatus(status);
+                dishService.updateById(dish);
+            }
         }
-        return R.error("售卖状态设置异常");
+        return R.success("售卖状态修改成功");
+    }
+
+    /**
+     * 套餐批量删除和单个删除
+     * @param ids
+     * @return
+     */
+    @DeleteMapping
+    public R<String> delete(@RequestParam("ids") List<Long> ids){
+       //删除菜品     这里的删除是逻辑删除
+        dishService.deleteByIds(ids);
+        //删除菜品对应口味   也是逻辑shanc
+        LambdaQueryWrapper<DishFlavor> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.in(DishFlavor::getDishId,ids);
+        dishFlavorService.remove(queryWrapper);
+        return R.success("菜品删除成功");
     }
 
 }
