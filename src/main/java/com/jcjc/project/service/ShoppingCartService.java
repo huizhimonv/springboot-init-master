@@ -1,6 +1,7 @@
 package com.jcjc.project.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.jcjc.project.common.R;
 import com.jcjc.project.model.entity.ShoppingCart;
 ;
 
@@ -11,4 +12,5 @@ import com.jcjc.project.model.entity.ShoppingCart;
 */
 public interface ShoppingCartService extends IService<ShoppingCart> {
 
+    R<String> clean();
 }

@@ -4,11 +4,14 @@ package com.jcjc.project.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jcjc.project.common.R;
+import com.jcjc.project.dto.DishDto;
 import com.jcjc.project.dto.SetmealDto;
 import com.jcjc.project.model.entity.Category;
+import com.jcjc.project.model.entity.Dish;
 import com.jcjc.project.model.entity.Setmeal;
 import com.jcjc.project.model.entity.SetmealDish;
 import com.jcjc.project.service.CategoryService;
+import com.jcjc.project.service.DishService;
 import com.jcjc.project.service.SetmealDishService;
 import com.jcjc.project.service.SetmealService;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +39,9 @@ public class SetmealController {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private DishService dishService;
 
     /**
      * 新增套餐
@@ -168,5 +174,35 @@ public class SetmealController {
 
         return R.success("套餐修改成功");
     }
+
+
+    /**
+     *  移动端点击套餐图片查看套餐具体内容
+     * 这里返回的是dto 对象，因为前端需要copies这个属性
+     * 前端主要要展示的信息是:套餐中菜品的基本信息，图片，菜品描述，以及菜品的份数
+     * @param SetmealId
+     * @return
+     */
+    @GetMapping("/dish/{id}")
+    public R<List<DishDto>> dish(@PathVariable("id") Long SetmealId){
+        LambdaQueryWrapper<SetmealDish> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(SetmealDish::getSetmealId,SetmealId);
+        //获取套餐里面的所有菜品  这个就是SetmealDish表里面的数据
+        List<SetmealDish> list = setmealDishService.list(queryWrapper);
+        List<DishDto> dishDtos = list.stream().map((setmealDish -> {
+            DishDto dishDto = new DishDto();
+            //其实这个BeanUtils的拷贝是浅拷贝,注意一下
+            BeanUtils.copyProperties(setmealDish,dishDto);
+            //这里是为了把套餐中的菜品的基本信息填充到dto中，比如菜品描述，菜品图片等菜品的基本信息
+            Long dishId = setmealDish.getDishId();
+            Dish dish = dishService.getById(dishId);
+            BeanUtils.copyProperties(dish,dishDto);
+            return dishDto;
+        })).collect(Collectors.toList());
+
+        return R.success(dishDtos);
+    }
+
+
 
 }
